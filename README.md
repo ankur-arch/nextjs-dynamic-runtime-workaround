@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+How to test.
 
-## Getting Started
+When the `/src/app/api/route.ts` contains this code
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+```ts
+export const runtime =
+  process.env.NODE_ENV === "production" ? "edge" : "nodejs";
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+let's look at the result of the build commands
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+# npm run build
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+[...]
+Route (app)                                Size     First Load JS
+┌ ○ /                                      5.34 kB        83.8 kB
+├ ○ /api                                   0 B                0 B
+```
 
-## Learn More
+```
+# NODE_ENV=production  npm run build
 
-To learn more about Next.js, take a look at the following resources:
+[...]
+Route (app)                                Size     First Load JS
+┌ ○ /                                      5.34 kB        83.8 kB
+├ ○ /api                                   0 B                0 B
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+When the content of the file is
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```ts
+export const runtime = "edge";
+```
 
-## Deploy on Vercel
+the build is always
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+# npm run build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[...]
+Route (app)                                Size     First Load JS
+┌ ○ /                                      5.34 kB        83.8 kB
+├ ℇ /api                                   0 B                0 B
+```
+
+As you can see the edge function (indicated by ℇ) is created only in the latter. A conditional build
+will never produce an edge function.
