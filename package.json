@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "pre-build": "bun run script.ts",
+    "build": "RUNTIME=edge bun run script.ts && next build && RUNTIME=nodejs bun run script.ts",
     "start": "next start",
     "lint": "next lint"
   },
