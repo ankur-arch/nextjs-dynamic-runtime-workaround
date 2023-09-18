@@ -64,4 +64,4 @@ You must call that script in your [`package.json`](./package.json) file by modif
 
 Additionally, incase a route is intended to use the nodejs runtime, add a `// skip` anywhere in the file, that'll indicate the script to ignore compiling that route as an `edge` route.
 
-Such as in this case this route is skipped from conversion into using an `edge` runtime rather than a `nodejs` runtime. 
+Such as in this case [this](./src/app/api/skip/route.ts) route is skipped from conversion into using an `edge` runtime rather than a `nodejs` runtime. 
